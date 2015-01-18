@@ -1,17 +1,105 @@
 package com.ups.m2dl.biodecouverte;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
+
+import java.io.File;
+import java.util.Calendar;
 
 
-public class PictureActivity extends Activity {
+public class PictureActivity extends Activity implements View.OnTouchListener {
+
+    private static final String BASE_PATH = "BioDecouverte/photos/";
+
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+
+    private Uri imageUri;
+
+    public void takePhoto() {
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int min = cal.get(Calendar.MINUTE);
+        int sec = cal.get(Calendar.SECOND);
+
+        String date = year + "-" + month + "-" + day + "_" + hour + "h" + min + "m" + sec;
+        String title = "title"; //TODO
+
+        String storageDirectory = BASE_PATH + date + "-" + title + ".jpg";
+
+        File photo = new File(Environment.getExternalStorageDirectory(), storageDirectory);
+
+        photo.getParentFile().mkdirs();
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+
+        imageUri = Uri.fromFile(photo);
+
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                Uri selectedImage = imageUri;
+                getContentResolver().notifyChange(selectedImage, null);
+                ContentResolver cr = getContentResolver();
+                Bitmap bitmap;
+                try {
+                    bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, selectedImage);
+
+                    Toast.makeText(this, selectedImage.toString(), Toast.LENGTH_LONG).show();
+
+                    bitmap.getWidth();
+                    bitmap.getHeight();
+
+                } catch (Exception e) {
+                    Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT).show();
+                    Log.e("Camera", e.toString());
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            float posx = event.getX();
+            float posy = event.getY();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
+
+        takePhoto();
     }
 
 
