@@ -48,11 +48,11 @@ public class Identification extends Activity implements AdapterView.OnItemClickL
         setContentView(R.layout.activity_identification);
 
         currentChoices = (ArrayList)getIntent().getSerializableExtra("currentChoices");
-        if(currentChoices == null) {
+        if(currentChoices == null)
             currentChoices = new ArrayList<String>();
-        } else {
+
+        if(currentChoices.size() > 0)
             parentNode = currentChoices.get(currentChoices.size()-1);
-        }
 
         determinationList = (ListView) findViewById(R.id.listView);
 
@@ -110,5 +110,17 @@ public class Identification extends Activity implements AdapterView.OnItemClickL
         Intent intent = new Intent(this, Identification.class);
         intent.putExtra("currentChoices", currentChoices);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(currentChoices.size() > 0) {
+            currentChoices.remove(currentChoices.size() - 1);
+
+            Intent intent = new Intent(this, Identification.class);
+            intent.putExtra("currentChoices", currentChoices);
+            startActivity(intent);
+        }
+        super.onBackPressed();
     }
 }
