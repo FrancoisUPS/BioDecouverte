@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 
-public class Identification extends Activity implements AdapterView.OnItemClickListener {
+public class Identification extends Activity implements AdapterView.OnItemClickListener, View.OnClickListener {
     private static Tree<String> determination = null;
     private String parentNode = null;
     private ListView determinationList;
@@ -78,6 +78,7 @@ public class Identification extends Activity implements AdapterView.OnItemClickL
         determinationList.addHeaderView(textView);
 
         determinationList.setOnItemClickListener(this);
+        findViewById(R.id.button).setOnClickListener(this);
     }
 
 
@@ -122,5 +123,10 @@ public class Identification extends Activity implements AdapterView.OnItemClickL
             startActivity(intent);
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public void onClick(View v) {
+        //Save everything to db and send email
     }
 }
