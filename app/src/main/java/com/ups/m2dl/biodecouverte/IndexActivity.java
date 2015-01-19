@@ -8,12 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-public class IdentificationActivity extends Activity {
+public class IndexActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_identification);
+        setContentView(R.layout.activity_index);
     }
 
 
