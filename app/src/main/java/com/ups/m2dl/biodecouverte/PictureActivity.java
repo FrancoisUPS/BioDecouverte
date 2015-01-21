@@ -3,6 +3,7 @@ package com.ups.m2dl.biodecouverte;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -100,6 +102,21 @@ public class PictureActivity extends Activity implements View.OnTouchListener {
         setContentView(R.layout.activity_picture);
 
         takePhoto();
+    }
+
+    public void validatePointOfInterest(View view) {
+        //Save username
+        SharedPreferences settings = getSharedPreferences(IndexActivity.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        TextView usernameText = (TextView) findViewById(R.id.usernameText);
+        editor.putString(IndexActivity.PREFS_URI, "<insert uri>");
+        editor.putString(IndexActivity.PREFS_METADATA, "<metadata>");
+
+        editor.commit();
+
+        Intent intent = new Intent(this, CommentActivity.class);
+        startActivity(intent);
     }
 
 

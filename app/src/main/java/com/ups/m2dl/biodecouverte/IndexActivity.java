@@ -17,6 +17,8 @@ public class IndexActivity extends Activity {
     public static final String PREFS_NAME = "BioDecouvertePrefs";
     public static final String PREFS_USERNAME = "username";
     public static final String PREFS_COMMENT = "comment";
+    public static final String PREFS_URI = "pictureUri";
+    public static final String PREFS_METADATA = "metadata";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +55,15 @@ public class IndexActivity extends Activity {
     }
 
     public void launchPictureActivity(View view) {
+        //Save username
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
 
         TextView usernameText = (TextView) findViewById(R.id.usernameText);
         editor.putString(PREFS_USERNAME, usernameText.getText().toString());
 
-        // Commit the edits!
         editor.commit();
+
 
         Intent intent = new Intent(this, PictureActivity.class);
         startActivity(intent);
