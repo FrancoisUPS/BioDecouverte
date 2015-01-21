@@ -2,13 +2,18 @@ package com.ups.m2dl.biodecouverte;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
 
 public class IndexActivity extends Activity {
+    public static final String PREFS_NAME = "BioDecouvertePrefs";
+    public static final String PREFS_USERNAME = "username";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,15 @@ public class IndexActivity extends Activity {
     }
 
     public void launchPictureActivity(View view) {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        TextView usernameText = (TextView) findViewById(R.id.usernameText);
+        editor.putString(PREFS_USERNAME, usernameText.getText().toString());
+
+        // Commit the edits!
+        editor.commit();
+
         Intent intent = new Intent(this, Identification.class);
         startActivity(intent);
     }

@@ -13,12 +13,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <AutoCompleteTextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Username"
-            android:id="@+id/usernameTextView"
-            android:layout_gravity="center_horizontal" />
+            android:id="@+id/usernameText"
+            android:text="Username" />
 
         <Button
             android:layout_width="wrap_content"

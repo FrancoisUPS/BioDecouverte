@@ -2,6 +2,7 @@ package com.ups.m2dl.biodecouverte;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -165,6 +166,8 @@ public class Identification extends Activity implements View.OnClickListener {
                 Toast.LENGTH_LONG).show();
 
         //send everything by mail and save to bd
-        
+        SharedPreferences settings = getSharedPreferences(IndexActivity.PREFS_NAME, 0);
+        String username = settings.getString(IndexActivity.PREFS_USERNAME, "Default username");
+
     }
 }
