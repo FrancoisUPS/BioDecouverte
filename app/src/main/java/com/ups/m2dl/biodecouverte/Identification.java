@@ -162,12 +162,37 @@ public class Identification extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(getApplicationContext(), "this is my Toast message!!! =)",
-                Toast.LENGTH_LONG).show();
-
         //send everything by mail and save to bd
         SharedPreferences settings = getSharedPreferences(IndexActivity.PREFS_NAME, 0);
         String username = settings.getString(IndexActivity.PREFS_USERNAME, "Default username");
+        String comment = settings.getString(IndexActivity.PREFS_COMMENT, "");
+        String metadata = settings.getString(IndexActivity.PREFS_METADATA, "");
+
+        try {
+            String email = "biodecouverte@yopmail.com";
+            String subject = "Picture taken on : " + settings.getString(IndexActivity.PREFS_DATE_TAKEN, "");;
+            String message  = comment + " \n It's determination key is : " + currentChoices.toString() + " \n Metadata: \n " + metadata;
+            String URI = settings.getString(IndexActivity.PREFS_URI, null);
+
+            final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("plain/text");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,new String[]{email});
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,subject);
+            if (URI != null) {
+                emailIntent.putExtra(Intent.EXTRA_STREAM, URI);
+            }
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+            this.startActivity(Intent.createChooser(emailIntent,
+                    "Sending email..."));
+
+        } catch (Throwable t) {
+            Toast.makeText(this,
+                    "Request failed try again: " + t.toString(),
+                    Toast.LENGTH_LONG).show();
+        }
+
+        Toast.makeText(getApplicationContext(), "this is my Toast message!!! =)",
+                Toast.LENGTH_LONG).show();
 
     }
 }
