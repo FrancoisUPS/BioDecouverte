@@ -112,6 +112,7 @@ public class PictureActivity extends Activity implements View.OnTouchListener {
         TextView usernameText = (TextView) findViewById(R.id.usernameText);
         editor.putString(IndexActivity.PREFS_URI, "<insert uri>");
         editor.putString(IndexActivity.PREFS_METADATA, "<metadata>");
+        editor.putString(IndexActivity.PREFS_DATE_TAKEN, "<date?>");
 
         editor.commit();
 
