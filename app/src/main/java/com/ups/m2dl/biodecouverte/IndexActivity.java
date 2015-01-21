@@ -61,7 +61,7 @@ public class IndexActivity extends Activity {
         // Commit the edits!
         editor.commit();
 
-        Intent intent = new Intent(this, Identification.class);
+        Intent intent = new Intent(this, PictureActivity.class);
         startActivity(intent);
     }
 }
