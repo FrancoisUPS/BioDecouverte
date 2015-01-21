@@ -29,6 +29,10 @@
             android:name=".Determination"
             android:label="@string/title_activity_determination" >
         </activity>
+        <activity
+            android:name=".CommentActivity"
+            android:label="@string/title_activity_comment" >
+        </activity>
     </application>
 
 </manifest>

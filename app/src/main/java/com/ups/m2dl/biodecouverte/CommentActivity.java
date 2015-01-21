@@ -3,39 +3,31 @@ package com.ups.m2dl.biodecouverte;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
 
-
-public class IndexActivity extends Activity {
-    public static final String PREFS_NAME = "BioDecouvertePrefs";
-    public static final String PREFS_USERNAME = "username";
-    public static final String PREFS_COMMENT = "comment";
+public class CommentActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_index);
+        setContentView(R.layout.activity_comment);
 
-        //Sets back previous username
-        SharedPreferences settings = getSharedPreferences(IndexActivity.PREFS_NAME, 0);
-        ((TextView) findViewById(R.id.usernameText)).setText(settings.getString(IndexActivity.PREFS_USERNAME, "Username"));
+        ((Button) findViewById(R.id.validateComment)).setOnClickListener(this);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_identification, menu);
+        getMenuInflater().inflate(R.menu.menu_comment, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -52,17 +44,18 @@ public class IndexActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void launchPictureActivity(View view) {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+    @Override
+    public void onClick(View v) {
+        //Save username
+        SharedPreferences settings = getSharedPreferences(IndexActivity.PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
 
-        TextView usernameText = (TextView) findViewById(R.id.usernameText);
-        editor.putString(PREFS_USERNAME, usernameText.getText().toString());
+        TextView commentText = (TextView) findViewById(R.id.commentText);
+        editor.putString(IndexActivity.PREFS_COMMENT, commentText.getText().toString());
 
-        // Commit the edits!
         editor.commit();
 
-        Intent intent = new Intent(this, PictureActivity.class);
+        Intent intent = new Intent(this, Identification.class);
         startActivity(intent);
     }
 }
