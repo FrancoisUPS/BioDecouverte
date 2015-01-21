@@ -11,22 +11,63 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.googlecode.jctree.LinkedTree;
-import com.googlecode.jctree.NodeNotFoundException;
-import com.googlecode.jctree.Tree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
-public class Identification extends Activity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class Identification extends Activity implements View.OnClickListener {
     private static Tree<String> determination = null;
     private String parentNode = null;
     private ListView determinationList;
     private ArrayList<String> currentChoices;
     private Collection<String> childList = null;
+
+
+    private class Tree<T> {
+        public List<T> roots;
+        public List<T> allNodes;
+        public Map<T,List<T> > children;
+
+        public Tree() {
+            allNodes = new ArrayList<T>();
+            children = new HashMap<T, List<T> >();
+            roots = new ArrayList<T>();
+        }
+
+        public void add(T node) {
+            roots.add(node);
+            allNodes.add(node);
+            children.put(node, new ArrayList<T>());
+        }
+
+        public void add(T parent, T child) {
+            addAll(parent, Arrays.asList(child));
+        }
+
+        public void addAll(T parent, List<T> childs) {
+            allNodes.addAll(childs);
+            children.get(parent).addAll(childs);
+
+            for(T child: childs){
+                children.put(child, new ArrayList<T>());
+            }
+        }
+
+        public List<T> children(T parent) {
+            return children.get(parent);
+        }
+
+        public List<T> roots() {
+            return roots;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,50 +75,52 @@ public class Identification extends Activity implements AdapterView.OnItemClickL
 
         //TODO: initialize tree from config file
         if(determination == null) {
-            determination = new LinkedTree<String>();
+            determination = new Tree<String>();
 
-            determination.add("root");
-            try {
-                determination.addAll("root", Arrays.asList("Plante", "Animal"));
-                determination.addAll("Plante", Arrays.asList("Hauteur > 50 cm", "Hauteur < 50 cm"));
-                determination.addAll("Animal", Arrays.asList("Invertébré", "Vertébré"));
-            } catch (NodeNotFoundException e) {
-                e.printStackTrace();
-            }
+            determination.add("Plante");
+            determination.add("Animal");
+            determination.addAll("Plante", Arrays.asList("Hauteur > 50 cm", "Hauteur < 50 cm"));
+            determination.addAll("Animal", Arrays.asList("Invertébré", "Vertébré"));
+
         }
         setContentView(R.layout.activity_identification);
 
+        //Get previous choices
         currentChoices = (ArrayList)getIntent().getSerializableExtra("currentChoices");
         if(currentChoices == null)
             currentChoices = new ArrayList<String>();
 
+        //parent node == last choice clicked
         if(currentChoices.size() > 0)
             parentNode = currentChoices.get(currentChoices.size()-1);
 
+        //Display children of parent or roots if no choice made yet
+        if(parentNode != null)
+            childList = determination.children(parentNode);
+        else
+            childList = determination.roots();
+
+        //display list of choices
         determinationList = (ListView) findViewById(R.id.listView);
-
-        try {
-            if(parentNode != null)
-                childList = determination.children(parentNode);
-        } catch (NodeNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        if(childList == null) {
-            try {
-                childList = determination.children(determination.root());
-            } catch (NodeNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
         ArrayAdapter<String> listAdapter  = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<>(childList));
         determinationList.setAdapter(listAdapter);
 
-        TextView textView = new TextView(getBaseContext());
+        //Display choices made in header above listview
+        TextView textView = (TextView) findViewById(R.id.textView2);
         textView.setText(currentChoices.toString());
-        determinationList.addHeaderView(textView);
 
-        determinationList.setOnItemClickListener(this);
+
+        determinationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                currentChoices.add(new ArrayList<>(childList).get(position));
+
+                Intent intent = new Intent(Identification.this, Identification.class);
+                intent.putExtra("currentChoices", currentChoices);
+                startActivity(intent);
+            }
+        });
+
         findViewById(R.id.button).setOnClickListener(this);
     }
 
@@ -105,15 +148,6 @@ public class Identification extends Activity implements AdapterView.OnItemClickL
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        currentChoices.add(new ArrayList<>(childList).get(position-1));
-
-        Intent intent = new Intent(this, Identification.class);
-        intent.putExtra("currentChoices", currentChoices);
-        startActivity(intent);
-    }
-
-    @Override
     public void onBackPressed() {
         if(currentChoices.size() > 0) {
             currentChoices.remove(currentChoices.size() - 1);
@@ -127,6 +161,10 @@ public class Identification extends Activity implements AdapterView.OnItemClickL
 
     @Override
     public void onClick(View v) {
-        //Save everything to db and send email
+        Toast.makeText(getApplicationContext(), "this is my Toast message!!! =)",
+                Toast.LENGTH_LONG).show();
+
+        //send everything by mail and save to bd
+        
     }
 }

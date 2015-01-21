@@ -24,6 +24,7 @@ public class IndexActivity extends Activity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -40,7 +41,7 @@ public class IndexActivity extends Activity {
     }
 
     public void launchPictureActivity(View view) {
-        Intent intent = new Intent(this, PictureActivity.class);
+        Intent intent = new Intent(this, Identification.class);
         startActivity(intent);
     }
 }
