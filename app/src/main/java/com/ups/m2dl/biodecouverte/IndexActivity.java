@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 
 public class IndexActivity extends Activity {
     public static final String PREFS_NAME = "BioDecouvertePrefs";
@@ -19,6 +21,10 @@ public class IndexActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+
+        //Sets back previous username
+        SharedPreferences settings = getSharedPreferences(IndexActivity.PREFS_NAME, 0);
+        ((TextView) findViewById(R.id.usernameText)).setText(settings.getString(IndexActivity.PREFS_USERNAME, "Username"));
     }
 
 
