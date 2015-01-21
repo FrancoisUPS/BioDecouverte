@@ -1,8 +1,10 @@
 package com.ups.m2dl.biodecouverte;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,8 @@ public class IndexActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         //Sets back previous username
         SharedPreferences settings = getSharedPreferences(IndexActivity.PREFS_NAME, 0);
