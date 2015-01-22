@@ -3,6 +3,7 @@ package com.ups.m2dl.biodecouverte;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -170,16 +171,16 @@ public class Identification extends Activity implements View.OnClickListener {
 
         try {
             String email = "biodecouverte@yopmail.com";
-            String subject = "Picture taken on : " + settings.getString(IndexActivity.PREFS_DATE_TAKEN, "");;
-            String message  = comment + " \n It's determination key is : " + currentChoices.toString() + " \n Metadata: \n " + metadata;
+            String subject = "Picture taken on: " + settings.getString(IndexActivity.PREFS_DATE_TAKEN,"");;
+            String message  = comment + "\nIt's determination key is : " + currentChoices.toString() + " \n Metadata: \n " + metadata;
             String URI = settings.getString(IndexActivity.PREFS_URI, null);
 
             final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            emailIntent.setType("plain/text");
+            emailIntent.setType("application/image");
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,new String[]{email});
             emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,subject);
             if (URI != null) {
-                emailIntent.putExtra(Intent.EXTRA_STREAM, URI);
+                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(URI));
             }
             emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
             this.startActivity(Intent.createChooser(emailIntent,

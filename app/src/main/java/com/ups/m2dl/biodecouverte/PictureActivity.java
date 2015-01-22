@@ -2,9 +2,13 @@ package com.ups.m2dl.biodecouverte;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,16 +22,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 
 
-public class PictureActivity extends Activity implements View.OnTouchListener {
+public class PictureActivity extends Activity implements View.OnTouchListener, LocationListener {
 
     private static final String BASE_PATH = "BioDecouverte/photos/";
 
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     private Uri imageUri;
+
+    private Location location;
 
     public void takePhoto() {
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -41,17 +49,16 @@ public class PictureActivity extends Activity implements View.OnTouchListener {
         int sec = cal.get(Calendar.SECOND);
 
         String date = year + "-" + month + "-" + day + "_" + hour + "h" + min + "m" + sec;
-        String title = "title"; //TODO
 
-        String storageDirectory = BASE_PATH + date + "-" + title + ".jpg";
+        String storageDirectory = BASE_PATH + date + ".jpg";
 
         File photo = new File(Environment.getExternalStorageDirectory(), storageDirectory);
 
         photo.getParentFile().mkdirs();
 
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-
         imageUri = Uri.fromFile(photo);
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
 
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
@@ -101,7 +108,15 @@ public class PictureActivity extends Activity implements View.OnTouchListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
 
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
         takePhoto();
+
+        if (this.location != null)
+        {
+
+        }
     }
 
     public void validatePointOfInterest(View view) {
@@ -110,9 +125,9 @@ public class PictureActivity extends Activity implements View.OnTouchListener {
         SharedPreferences.Editor editor = settings.edit();
 
         TextView usernameText = (TextView) findViewById(R.id.usernameText);
-        editor.putString(IndexActivity.PREFS_URI, "<insert uri>");
-        editor.putString(IndexActivity.PREFS_METADATA, "<metadata>");
-        editor.putString(IndexActivity.PREFS_DATE_TAKEN, "<date?>");
+        editor.putString(IndexActivity.PREFS_URI,imageUri.toString());
+        editor.putString(IndexActivity.PREFS_METADATA,location.toString());
+        editor.putString(IndexActivity.PREFS_DATE_TAKEN,new Date().toString());
 
         editor.commit();
 
@@ -141,5 +156,25 @@ public class PictureActivity extends Activity implements View.OnTouchListener {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        this.location = location;
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }

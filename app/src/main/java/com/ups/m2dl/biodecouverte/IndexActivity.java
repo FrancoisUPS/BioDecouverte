@@ -28,8 +28,6 @@ public class IndexActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
         //Sets back previous username
         SharedPreferences settings = getSharedPreferences(IndexActivity.PREFS_NAME, 0);
         ((TextView) findViewById(R.id.usernameText)).setText(settings.getString(IndexActivity.PREFS_USERNAME, "Username"));
