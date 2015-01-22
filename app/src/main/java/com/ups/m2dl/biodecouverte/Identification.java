@@ -171,7 +171,7 @@ public class Identification extends Activity implements View.OnClickListener {
 
         try {
             String email = "biodecouverte@yopmail.com";
-            String subject = "Picture taken on: " + settings.getString(IndexActivity.PREFS_DATE_TAKEN,"");;
+            String subject = "Picture taken on: " + settings.getString(IndexActivity.PREFS_DATE_TAKEN,"") + " by " + username;
             String message  = comment + "\nIt's determination key is : " + currentChoices.toString() + " \n Metadata: \n " + metadata;
             String URI = settings.getString(IndexActivity.PREFS_URI, null);
 
@@ -191,9 +191,5 @@ public class Identification extends Activity implements View.OnClickListener {
                     "Request failed try again: " + t.toString(),
                     Toast.LENGTH_LONG).show();
         }
-
-        Toast.makeText(getApplicationContext(), "this is my Toast message!!! =)",
-                Toast.LENGTH_LONG).show();
-
     }
 }
