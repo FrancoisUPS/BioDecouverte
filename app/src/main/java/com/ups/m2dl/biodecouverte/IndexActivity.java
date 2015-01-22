@@ -22,6 +22,8 @@ public class IndexActivity extends Activity {
     public static final String PREFS_URI = "pictureUri";
     public static final String PREFS_METADATA = "metadata";
     public static final String PREFS_DATE_TAKEN = "datetaken";
+    public static final String PREFS_POI_X = "poix";
+    public static final String PREFS_POI_Y = "poiy";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

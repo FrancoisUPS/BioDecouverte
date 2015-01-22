@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,9 @@ public class PictureActivity extends Activity implements View.OnTouchListener, L
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     private Uri imageUri;
+
+    private Float posx = 0F;
+    private Float posy = 0F;
 
     private Location location;
 
@@ -70,15 +74,14 @@ public class PictureActivity extends Activity implements View.OnTouchListener, L
 
                 Uri selectedImage = imageUri;
                 getContentResolver().notifyChange(selectedImage, null);
-                ContentResolver cr = getContentResolver();
-                Bitmap bitmap;
                 try {
-                    bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, selectedImage);
 
                     Toast.makeText(this, selectedImage.toString(), Toast.LENGTH_LONG).show();
 
-                    bitmap.getWidth();
-                    bitmap.getHeight();
+                    ImageView imgView = (ImageView) findViewById(R.id.imageView);
+
+                    imgView.setImageURI(imageUri);
+                    imgView.setOnTouchListener(this);
 
                 } catch (Exception e) {
                     Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT).show();
@@ -91,16 +94,13 @@ public class PictureActivity extends Activity implements View.OnTouchListener, L
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            float posx = event.getX();
-            float posy = event.getY();
+            posx = event.getX();
+            posy = event.getY();
+
+            Toast.makeText(this, "POI defined at " + posx + "," + posy, Toast.LENGTH_LONG).show();
         }
 
         return true;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
     }
 
     @Override
@@ -112,11 +112,6 @@ public class PictureActivity extends Activity implements View.OnTouchListener, L
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
         takePhoto();
-
-        if (this.location != null)
-        {
-
-        }
     }
 
     public void validatePointOfInterest(View view) {
@@ -128,6 +123,8 @@ public class PictureActivity extends Activity implements View.OnTouchListener, L
         editor.putString(IndexActivity.PREFS_URI,imageUri.toString());
         editor.putString(IndexActivity.PREFS_METADATA,location.toString());
         editor.putString(IndexActivity.PREFS_DATE_TAKEN,new Date().toString());
+        editor.putString(IndexActivity.PREFS_POI_X,posx.toString());
+        editor.putString(IndexActivity.PREFS_POI_Y,posy.toString());
 
         editor.commit();
 

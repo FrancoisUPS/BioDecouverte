@@ -168,11 +168,13 @@ public class Identification extends Activity implements View.OnClickListener {
         String username = settings.getString(IndexActivity.PREFS_USERNAME, "Default username");
         String comment = settings.getString(IndexActivity.PREFS_COMMENT, "");
         String metadata = settings.getString(IndexActivity.PREFS_METADATA, "");
+        String poix = settings.getString(IndexActivity.PREFS_POI_X, "");
+        String poiy = settings.getString(IndexActivity.PREFS_POI_Y, "");
 
         try {
             String email = "biodecouverte@yopmail.com";
             String subject = "Picture taken on: " + settings.getString(IndexActivity.PREFS_DATE_TAKEN,"") + " by " + username;
-            String message  = comment + "\nIt's determination key is : " + currentChoices.toString() + " \n Metadata: \n " + metadata;
+            String message  = comment + "\nDetermination key: " + currentChoices.toString() + "\nLocation: " + metadata + "\nPOI: " + poix + "," + poiy;
             String URI = settings.getString(IndexActivity.PREFS_URI, null);
 
             final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
